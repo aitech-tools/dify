@@ -667,11 +667,14 @@ services:
         condition: service_started
     volumes:
       # Mount the storage directory to the container, for storing user files.
+      - ./ca:/usr/local/share/ca-certificates/cato
       - ./volumes/app/storage:/app/api/storage
     networks:
       - ssrf_proxy_network
       - default
-
+    entrypoint: >
+      sh -c "update-ca-certificates && exec /entrypoint.sh"
+  
   # worker service
   # The Celery worker for processing all queues (dataset, workflow, mail, etc.)
   worker:
